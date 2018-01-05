@@ -11,3 +11,4 @@ This code checks website certificates. If it attempts to follow a shortened link
 
 Finally, this code imposes a 10 second limit on any attempt to parse an individual URL. If the script takes longer than 10 seconds on a URL, it returns a RuntimeError and moves on to the next URL.
 
+sample_script.py demonstrates how you can use this code.
