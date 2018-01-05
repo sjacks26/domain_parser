@@ -34,10 +34,8 @@ def parser(link):
                 expanded_link = response.geturl()
                 domain = urlparse(expanded_link).netloc
             except error.HTTPError as e:
-                if e.code == 403:
-                    """
-                    If 403 error, spoof user-agent to look like a browser 
-                    """
+            # If 403 error, spoof user-agent to look like a browser 
+              if e.code == 403:
                     try:
                         req = request.Request(link)
                         req.add_header('User-agent', 'Mozilla/5.0')
@@ -51,10 +49,8 @@ def parser(link):
                 else:
                     error_code = str(e.code)
                     domain = urlparse(link).netloc
-            # If the error isn't an HTTPError, parse domain from original url
-        # If it takes longer than 10 seconds to follow a url, parse domain from original url
+        # If it takes longer than 10 seconds to follow a url, return RuntimeError
         except RuntimeError as e:
-            domain = urlparse(link).netloc
             error_code = e.args
             pass
 
