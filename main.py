@@ -59,6 +59,7 @@ def parser(link):
         # If it takes longer than 10 seconds to follow a url, return RuntimeError
         except RuntimeError as e:
             error_code = e.args
+        signal.alarm(0)
 
     # If the link doesn't appear to be shortened, parse the domain from the link as it appears
     else:
