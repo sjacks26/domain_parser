@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 from urllib import error, request
 import signal
+import ssl
 
 link_shortener_domains = ["tiny.cc", "youtu.be", "ht.ly", "clk.gop", "eepurl.com", "dld.bz", "t.co", "bit.ly", "goo.gl",
                           "ow.ly", "tinyurl.com", "bitly.com", "ln.is", "linkis.com", "tr.im", "smarturl.it", "spr.ly",
@@ -20,6 +21,8 @@ def parser(link):
     # Shortened urls trigger this loop, which attempts to follow shortened urls to their final destination, then parse
     # the domain based on that final destination.
     if any(l in link for l in link_shortener_domains) and not 't.com' in link:
+        if not link.startswith("http"):
+            link = "http://" + link
         signal.alarm(10)
         # The first try statement adds a timer, so that the script doesn't get stuck on a problematic url.
         try:
@@ -34,8 +37,8 @@ def parser(link):
                 expanded_link = response.geturl()
                 domain = urlparse(expanded_link).netloc
             except error.HTTPError as e:
-            # If 403 error, spoof user-agent to look like a browser 
-              if e.code == 403:
+                # If 403 error, spoof user-agent to look like a browser
+                if e.code == 403:
                     try:
                         req = request.Request(link)
                         req.add_header('User-agent', 'Mozilla/5.0')
@@ -45,14 +48,17 @@ def parser(link):
                     # If spoof fails, parse domain from original url
                     except:
                         domain = urlparse(link).netloc
-                # If error code is anything other than 403, parse domain from original url
+                # If HTTPError code is anything other than 403, parse domain from original url
                 else:
                     error_code = str(e.code)
                     domain = urlparse(link).netloc
+            except error.URLError as e:
+                error_code = str(e)
+            except ssl.CertificateError as e:
+                error_code = str(e)
         # If it takes longer than 10 seconds to follow a url, return RuntimeError
         except RuntimeError as e:
             error_code = e.args
-            pass
 
     # If the link doesn't appear to be shortened, parse the domain from the link as it appears
     else:
