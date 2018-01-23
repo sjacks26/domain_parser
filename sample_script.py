@@ -3,6 +3,8 @@ from urllib import error, request
 import signal
 import ssl
 
+# Change the next line based on what you want the code to return.  
+Return_option = "domain" # "domain", "url", or "both"
 
 link_shortener_domains = ["tiny.cc", "youtu.be", "ht.ly", "clk.gop", "eepurl.com", "dld.bz", "t.co", "bit.ly", "goo.gl",
                           "ow.ly", "tinyurl.com", "bitly.com", "ln.is", "linkis.com", "tr.im", "smarturl.it", "spr.ly",
@@ -72,8 +74,18 @@ def parser(link):
 
     if 'error_code' in locals():
         return error_code
-    else:
+    elif Return_option == "domain":
         return domain
+    elif Return_option == "url":
+        if expanded_url:
+            return expanded_url
+        else:
+            return link
+    elif Return_option == "both":
+        if expanded_url:
+            return expanded_url, domain
+        else:
+            return link, domain
 
 """
 Everything before this is copied from main.py. Change below here for your data.
