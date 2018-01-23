@@ -1,6 +1,6 @@
 # domain_parser
 
-This code uses Python's urllib to identify domains in URLs. 
+This code uses Python's urllib to identify domains in URLs.  
 The user can specify one of three options for output: either just the domain for each URL, just each full URL, or both the domain and the full URL.
 
 For most URLs, it simply identifies the domain in the URL as it appears.
